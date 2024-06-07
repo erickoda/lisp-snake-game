@@ -1,5 +1,5 @@
-(defconstant MAP_HEIGHT    15)
-(defconstant MAP_WIDTH     15)
+(defconstant MAP_HEIGHT    20)
+(defconstant MAP_WIDTH     20)
 (defconstant MAP_DIMENSION 2)
 
 
@@ -81,6 +81,14 @@
   (return-from is-moviment-valid nil)
 )
 
+(defun is-moviment-possible (snake_position moviment)
+  (cond ((string-equal moviment "A") (= (+ (aref snake_position 0 1) -1) 0) )
+        ((string-equal moviment "W") (= (+ (aref snake_position 0 0) -1) 0) )
+        ((string-equal moviment "S") (= (+ (aref snake_position 0 0) +1) (- MAP_HEIGHT 1)) )
+        ((string-equal moviment "D") (= (+ (aref snake_position 0 1) +1) (- MAP_WIDTH 1)) )
+  )
+)
+
 (defun main()
   (setq snake_position (make-array (list (* MAP_HEIGHT MAP_WIDTH) 2) :initial-element 1 ) )
   (setq snake_size 1)
@@ -90,6 +98,13 @@
     (print-game-map game_map snake_position snake_size food_position)
 
     (setq moviment (get-snake-next-moviment))
+
+    (if (is-moviment-possible snake_position moviment)
+      (progn
+        (princ "Moviment not possible")
+        (return-from main)
+      )
+    )
 
     (if (is-moviment-valid moviment)
       (progn
