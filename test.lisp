@@ -95,7 +95,10 @@
       (progn
         (move-snake snake_position moviment)
         (if (snake-has-eaten-food snake_position food_position)
-          (setq snake_size (+ snake_size 1))
+          (progn
+            (setq snake_size (+ snake_size 1))
+            (setq food_position (genarate-randow-position))
+          )
         )
       )
     )
