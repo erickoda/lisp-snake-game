@@ -96,11 +96,30 @@
   )
 )
 
+(defun update-score (score)
+  (setq score (+ score 100))
+)
+
+(defun grow-snake (snake_size)
+  (setq snake_size (+ snake_size 1))
+)
+
+(defun print-game-over-screnn (score)
+  (screen:clear-window (screen:make-window))
+  (princ "Your Snake Died!!!")
+  (princ #\Newline)
+  (princ "Game Over")
+  (princ #\Newline)
+  (princ "Score: ")
+  (princ score)
+)
+
 (defun main()
   (setq snake_position (make-array (list (* MAP_HEIGHT MAP_WIDTH) 2) :initial-element 1 ) )
   (setq snake_size 1)
   (setq food_position (genarate-randow-position snake_position snake_size))
   (setq game_map (make-map MAP_HEIGHT MAP_WIDTH))
+  (setq score 0)
   (loop do
     (print-game-map game_map snake_position snake_size food_position)
 
@@ -108,7 +127,7 @@
 
     (if (is-moviment-possible snake_position moviment snake_size)
       (progn
-        (princ "Moviment not possible")
+        (print-game-over-screnn score)
         (return-from main)
       )
     )
@@ -118,7 +137,8 @@
         (move-snake snake_position moviment)
         (if (snake-has-eaten-food snake_position food_position)
           (progn
-            (setq snake_size (+ snake_size 1))
+            (setq score (update-score score))
+            (setq snake_size (grow-snake snake_size))
             (setq food_position (genarate-randow-position snake_position snake_size))
           )
         )
