@@ -1,6 +1,6 @@
 (defconstant MAP_HEIGHT    20)
 (defconstant MAP_WIDTH     20)
-(defconstant MAP_DIMENSION 2)
+(defconstant MAP_DIMENSION  2)
 
 
 (defun make-map (map-height map-width)
@@ -81,11 +81,11 @@
   (return-from is-moviment-valid nil)
 )
 
-(defun is-moviment-possible (snake_position moviment)
-  (cond ((string-equal moviment "A") (= (+ (aref snake_position 0 1) -1) 0) )
-        ((string-equal moviment "W") (= (+ (aref snake_position 0 0) -1) 0) )
-        ((string-equal moviment "S") (= (+ (aref snake_position 0 0) +1) (- MAP_HEIGHT 1)) )
-        ((string-equal moviment "D") (= (+ (aref snake_position 0 1) +1) (- MAP_WIDTH 1)) )
+(defun is-moviment-possible (snake_position moviment snake_size)
+  (cond ((string-equal moviment "A") (or (= (+ (aref snake_position 0 1) -1) 0) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) -1)) ))
+        ((string-equal moviment "W") (or (= (+ (aref snake_position 0 0) -1) 0) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) -1) (aref snake_position 0 1)) ))
+        ((string-equal moviment "S") (or (= (+ (aref snake_position 0 0) 1) (- MAP_HEIGHT 1)) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) 1) (aref snake_position 0 1)) ) )
+        ((string-equal moviment "D") (or (= (+ (aref snake_position 0 1) 1) (- MAP_WIDTH 1))) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) 1)) )
   )
 )
 
@@ -99,7 +99,7 @@
 
     (setq moviment (get-snake-next-moviment))
 
-    (if (is-moviment-possible snake_position moviment)
+    (if (is-moviment-possible snake_position moviment snake_size)
       (progn
         (princ "Moviment not possible")
         (return-from main)
