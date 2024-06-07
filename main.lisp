@@ -88,7 +88,7 @@
   (return-from is-moviment-valid nil)
 )
 
-(defun is-moviment-possible (snake_position moviment snake_size)
+(defun is-snake-dead (snake_position moviment snake_size)
   (cond ((string-equal moviment "A") (or (= (+ (aref snake_position 0 1) -1) 0) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) -1)) ))
         ((string-equal moviment "W") (or (= (+ (aref snake_position 0 0) -1) 0) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) -1) (aref snake_position 0 1)) ))
         ((string-equal moviment "S") (or (= (+ (aref snake_position 0 0) 1) (- MAP_HEIGHT 1)) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) 1) (aref snake_position 0 1)) ) )
@@ -125,7 +125,7 @@
 
     (setq moviment (get-snake-next-moviment))
 
-    (if (is-moviment-possible snake_position moviment snake_size)
+    (if (is-snake-dead snake_position moviment snake_size)
       (progn
         (print-game-over-screnn score)
         (return-from main)
