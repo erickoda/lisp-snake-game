@@ -1,5 +1,6 @@
-(defconstant MAP_HEIGHT    20)
-(defconstant MAP_WIDTH     20)
+(setf *random-state* (make-random-state t))
+(defconstant MAP_HEIGHT    10)
+(defconstant MAP_WIDTH     10)
 (defconstant MAP_DIMENSION  2)
 
 
