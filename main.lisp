@@ -67,9 +67,15 @@
   (return-from snake-has-eaten-food nil)
 )
 
-(defun genarate-randow-position ()
+(defun genarate-randow-position (snake_position snake_size)
   (setq randow-x (random MAP_HEIGHT))
   (setq randow-y (random MAP_WIDTH ))
+  (cond ((is-snake-position snake_position snake_size randow-x randow-y) (return-from genarate-randow-position (genarate-randow-position snake_position snake_size)))
+        ((= randow-x 0) (return-from genarate-randow-position (genarate-randow-position snake_position snake_size)))
+        ((= randow-y 0) (return-from genarate-randow-position (genarate-randow-position snake_position snake_size)))
+        ((= randow-x (- MAP_HEIGHT 1)) (return-from genarate-randow-position (genarate-randow-position snake_position snake_size)))
+        ((= randow-y (- MAP_WIDTH 1)) (return-from genarate-randow-position (genarate-randow-position snake_position snake_size)))
+  )
   (return-from genarate-randow-position (list randow-x randow-y))
 )
 
@@ -86,14 +92,14 @@
   (cond ((string-equal moviment "A") (or (= (+ (aref snake_position 0 1) -1) 0) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) -1)) ))
         ((string-equal moviment "W") (or (= (+ (aref snake_position 0 0) -1) 0) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) -1) (aref snake_position 0 1)) ))
         ((string-equal moviment "S") (or (= (+ (aref snake_position 0 0) 1) (- MAP_HEIGHT 1)) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) 1) (aref snake_position 0 1)) ) )
-        ((string-equal moviment "D") (or (= (+ (aref snake_position 0 1) 1) (- MAP_WIDTH 1))) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) 1)) )
+        ((string-equal moviment "D") (or (= (+ (aref snake_position 0 1) 1) (- MAP_WIDTH 1)) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) 1))  ) )
   )
 )
 
 (defun main()
   (setq snake_position (make-array (list (* MAP_HEIGHT MAP_WIDTH) 2) :initial-element 1 ) )
   (setq snake_size 1)
-  (setq food_position (genarate-randow-position))
+  (setq food_position (genarate-randow-position snake_position snake_size))
   (setq game_map (make-map MAP_HEIGHT MAP_WIDTH))
   (loop do
     (print-game-map game_map snake_position snake_size food_position)
@@ -113,7 +119,7 @@
         (if (snake-has-eaten-food snake_position food_position)
           (progn
             (setq snake_size (+ snake_size 1))
-            (setq food_position (genarate-randow-position))
+            (setq food_position (genarate-randow-position snake_position snake_size))
           )
         )
       )
