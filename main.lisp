@@ -1,3 +1,12 @@
+;
+;  =================================================================
+;  | PROJETO CRIADO PARA A DISCIPLINA DE                           |
+;  | LPP PELOS ALUNOS:                                             |
+;  |  - ERICK ODA COULTER 14568671                                 |
+;  |  - Lorenzo Dutra de Oliveira Sales Decari Vicentin 14590093   |
+;  |  - Raphael Zoega Cali Gomes 11800729                          |
+;  =================================================================
+
 (setf *random-state* (make-random-state t))
 (defconstant MAP_HEIGHT    10)
 (defconstant MAP_WIDTH     10)
