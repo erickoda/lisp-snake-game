@@ -3,7 +3,12 @@
 (defconstant MAP_WIDTH     10)
 (defconstant MAP_DIMENSION  2)
 
-
+; this function will setup the base map of the game
+; the map will be a matrix with the height and width of the game
+; the map will have the walls and the empty spaces
+; the walls will be represented by the characters "-" and "|"
+; the empty spaces will be represented by the character " "
+; the snake and the food will only be displayed in the empty spaces
 (defun make-map (map-height map-width)
   (setq game_map (make-array (list MAP_HEIGHT MAP_WIDTH)))
   (dotimes (i MAP_HEIGHT)
@@ -19,6 +24,9 @@
   (return-from make-map game_map)
 )
 
+
+; this function will print the game map
+; the game map will be overlaid with the snake and the food
 (defun print-game-map (game-map snake_position snake_size food_position)
   (screen:clear-window (screen:make-window))
   (dotimes (i MAP_HEIGHT)
@@ -48,6 +56,8 @@
   (return-from get-snake-next-moviment moviment)
 )
 
+; this function will move the snake
+; this function updates all history positions of the snake
 (defun move-snake (snake_position moviment)
   (loop for i downfrom (- (* MAP_HEIGHT MAP_WIDTH) 1) to 1 by 1 do
     (setf (aref snake_position i 0) (aref snake_position (- i 1) 0))
@@ -67,6 +77,9 @@
   (return-from snake-has-eaten-food nil)
 )
 
+; this function generates a random position for the food
+; if the food is generated in a position that is already occupied by the snake or the wall
+; the function will generate a new position for the food
 (defun genarate-randow-food-position (snake_position snake_size)
   (setq randow-x (random MAP_HEIGHT))
   (setq randow-y (random MAP_WIDTH ))
@@ -88,6 +101,7 @@
   (return-from is-moviment-valid nil)
 )
 
+; the snake will be dead if it hits the wall or itself
 (defun is-snake-dead (snake_position moviment snake_size)
   (cond ((string-equal moviment "A") (or (= (+ (aref snake_position 0 1) -1) 0) (is-snake-position snake_position snake_size (aref snake_position 0 0) (+ (aref snake_position 0 1) -1)) ))
         ((string-equal moviment "W") (or (= (+ (aref snake_position 0 0) -1) 0) (is-snake-position snake_position snake_size (+ (aref snake_position 0 0) -1) (aref snake_position 0 1)) ))
@@ -116,11 +130,31 @@
     | $$|_  $$| $$__  $$| $$  $$$| $$| $$__/         | $$  | $$ \\  $$ $$/ | $$__/   | $$__  $$
     | $$  \\ $$| $$  | $$| $$\\  $ | $$| $$            | $$  | $$  \\  $$$/  | $$      | $$  \\ $$
     |  $$$$$$/| $$  | $$| $$ \\/  | $$| $$$$$$$$      |  $$$$$$/   \\  $/   | $$$$$$$$| $$  | $$
-    \\______/ |__/  |__/|__/     |__/|________/       \\______/     \\_/    |________/|__/  |__/
+     \\______/ |__/  |__/|__/     |__/|________/       \\______/     \\_/    |________/|__/  |__/
  ")
   (princ #\Newline)
   (princ "Score: ")
   (princ score)
+)
+
+(defun print-intial-game-screen ()
+  (screen:clear-window (screen:make-window))
+  (princ "
+     $$$$$$\\  $$\\   $$\\  $$$$$$\\  $$\\   $$\\ $$$$$$$$\\        $$$$$$\\   $$$$$$\\  $$\\      $$\\ $$$$$$$$\\ 
+    $$  __$$\\ $$$\\  $$ |$$  __$$\\ $$ | $$  |$$  _____|      $$  __$$\\ $$  __$$\\ $$$\\    $$$ |$$  _____|
+    $$ /  \\__|$$$$\\ $$ |$$ /  $$ |$$ |$$  / $$ |            $$ /  \\__|$$ /  $$ |$$$$\\  $$$$ |$$ |      
+    \\$$$$$$\\  $$ $$\\$$ |$$$$$$$$ |$$$$$  /  $$$$$\\          $$ |$$$$\\ $$$$$$$$ |$$\\$$\\$$ $$ |$$$$$\\    
+     \\____$$\\ $$ \\$$$$ |$$  __$$ |$$  $$<   $$  __|         $$ |\\_$$ |$$  __$$ |$$ \\$$$  $$ |$$  __|   
+    $$\\   $$ |$$ |\\$$$ |$$ |  $$ |$$ |\\$$\\  $$ |            $$ |  $$ |$$ |  $$ |$$ |\\$  /$$ |$$ |      
+    \\$$$$$$  |$$ | \\$$ |$$ |  $$ |$$ | \\$$\\ $$$$$$$$\\       \\$$$$$$  |$$ |  $$ |$$ | \\_/ $$ |$$$$$$$$\\ 
+    \\______/ \\__|  \\__|\\__|  \\__|\\__|  \\__|\\________|       \\______/ \\__|  \\__|\\__|     \\__|\\________|
+  ")
+  (princ #\Newline)
+  (princ #\Newline)
+  (princ "Use the keys W, A, S, D to move the snake")
+  (princ #\Newline)
+  (princ "Press any key to start the game")
+  (read)
 )
 
 (defun main()
@@ -129,6 +163,9 @@
   (setq food_position (genarate-randow-food-position snake_position snake_size))
   (setq game_map (make-map MAP_HEIGHT MAP_WIDTH))
   (setq score 0)
+
+  (print-intial-game-screen)
+
   (loop do
     (print-game-map game_map snake_position snake_size food_position)
 
